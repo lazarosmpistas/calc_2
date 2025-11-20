@@ -1,6 +1,8 @@
 import re
 import pandas as pd
 import os
+import sys
+
 
 def operation(num1, num2, operator):
     match operator:
@@ -18,6 +20,7 @@ def operation(num1, num2, operator):
         case _:
             print('Operator not recognized')
             return None
+
 
 def checks(num1, num2, operator):
     # split in commas/dots to check if numeric
@@ -42,6 +45,7 @@ def checks(num1, num2, operator):
     print("VALID")
     return True
 
+
 def process(num1, num2):
     # remove whitespace
     num1 = num1.replace(' ', '')
@@ -54,15 +58,16 @@ def process(num1, num2):
 
     return num1, num2
 
-if __name__ == '__main__':
+
+def main():
     # input
     num1 = input('Enter first number (float with . or ,): ')
     num2 = input('Enter second number (float with . or ,): ')
     operator = input('Enter operation (+, -, *, /): ')
 
     if not checks(num1, num2, operator):
-        print('Invalid input')
-        exit(1)
+        print('Invalid input', file=sys.stderr)
+        sys.exit(1)
 
     num1, num2 = process(num1, num2)
 
@@ -82,3 +87,7 @@ if __name__ == '__main__':
     df_new = pd.concat([df, pd.DataFrame([{'num1': num1, 'num2': num2, 'operator': operator, 'result': result}])], ignore_index=True)
 
     df_new.to_csv('calc_logs.csv', index=False)
+
+
+if __name__ == '__main__':
+    main()
