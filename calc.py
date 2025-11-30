@@ -5,6 +5,13 @@ import sys
 
 
 def operation(num1, num2, operator):
+    """
+    def for the operation of the calculator
+    :param num1:
+    :param num2:
+    :param operator:
+    :return: return num or none if error
+    """
     match operator:
         case '+':
             return num1 + num2
@@ -23,6 +30,13 @@ def operation(num1, num2, operator):
 
 
 def checks(num1, num2, operator):
+    """
+    check if the input is valid
+    :param num1:
+    :param num2:
+    :param operator:
+    :return: bool
+    """
     # split in commas/dots to check if numeric
     num1_parts = re.split(r'[.,]+', num1)
     num2_parts = re.split(r'[.,]+', num2)
@@ -47,6 +61,12 @@ def checks(num1, num2, operator):
 
 
 def process(num1, num2):
+    """
+    float conversion and remove whitespace
+    :param num1:
+    :param num2:
+    :return: num1 and num2 as floats
+    """
     # remove whitespace
     num1 = num1.replace(' ', '')
     num2 = num2.replace(' ', '')
@@ -60,12 +80,20 @@ def process(num1, num2):
 
 
 def log_results(num1, num2, operator, result,):
+    """
+    log the results to a csv file
+    :param num1:
+    :param num2:
+    :param operator:
+    :param result:
+    :return:
+    """
     default_dir = os.getcwd()
     try:
-        if not os.path.exists(f"{default_dir}/calc_logs.csv"):
+        if not os.path.exists(f"{default_dir}/data/calc_logs.csv"):
             df = pd.DataFrame()
         else:
-            df = pd.read_csv(f"{default_dir}/calc_logs.csv")
+            df = pd.read_csv(f"{default_dir}/data/calc_logs.csv")
     except Exception as e:
         print(f"something wrong with that file my friend: {e}\nI will nuke it for you with this calc operation!!")
         df = pd.DataFrame()
@@ -73,10 +101,14 @@ def log_results(num1, num2, operator, result,):
     df_new = pd.concat([df, pd.DataFrame([{'num1': num1, 'num2': num2, 'operator': operator, 'result': result}])],
                        ignore_index=True)
 
-    df_new.to_csv('calc_logs.csv', index=False)
+    df_new.to_csv('data/calc_logs.csv', index=False)
 
 
 def main():
+    '''
+    main function of the calculator
+    :return:
+    '''
     # input
     num1 = input('Enter first number (float with . or ,): ')
     num2 = input('Enter second number (float with . or ,): ')
