@@ -32,6 +32,8 @@ def main():
     main_frame = CTkFrame(master=window)
     main_frame.grid(row=0, column=0)
 
+    # HEADER FRAME
+
     frame_header = CTkFrame(master=main_frame)
     frame_header.grid(row=0, column=0, sticky=NSEW)
     #frame_header.pack(expand=True, fill=BOTH)
@@ -107,7 +109,7 @@ def main():
     frame_operation.columnconfigure(3, weight=1)
 
     frame_util = CTkFrame(master=main_frame)
-    frame_util.grid(row=3, column=0, sticky=NSEW)
+    frame_util.grid(row=2, column=0, sticky=NSEW)
 
     b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(b_num1.get(), b_num2.get(), b_operand.get()))
     b_compute.pack(expand=True, pady=10)
