@@ -5,28 +5,23 @@ from customtkinter import CTkProgressBar
 import calc
 import re
 
-def call_compute(num1, num2, operator):
+def call_compute(str):
+    num1, num2, operator, status = calc.split_compute_string(str)
+
     if not calc.checks(num1, num2, operator):
-        print("Invalid input my sister/brother!")
-    else:
+        status = False
+
+    if status:
         num1, num2 = calc.process(num1, num2)
         result = calc.operation(num1, num2, operator)
         calc.log_results(num1, num2, operator, result)
         print(result)
-
-
-def split_compute_string(compute_string):
-    if len(re.findall(r'[+*/-]', compute_string)) != 1:
-        return None, None, None
-    operator = re.findall(r'[+*/-]', compute_string)[0]
-    num1, num2= re.split(r'[+*/-]', compute_string)
-    if not num1 or not num2:
-        return None, None, None
-    return num1, num2, operator
+    else:
+        print("Invalid input my sister/brother!")
 
 
 def main():
-    window = CTk(screenName="CALC_V2", )
+    window = CTk(screenName=":0", )
     set_appearance_mode('dark')
 
     main_frame = CTkFrame(master=window)
@@ -103,6 +98,9 @@ def main():
     b_divide = CTkButton(master=frame_operation, text="/", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "/"))
     b_divide.grid(row=4, column=3)
 
+    b_backspace = CTkButton(master=frame_operation, text="<", width=50, height=50, command=lambda: operation_string.set(operation_string.get()[:len(operation_string.get()) - 1]))
+    b_backspace.grid(row=4, column=2)
+
     frame_operation.columnconfigure(0, weight=1)
     frame_operation.columnconfigure(1, weight=1)
     frame_operation.columnconfigure(2, weight=1)
@@ -111,7 +109,7 @@ def main():
     frame_util = CTkFrame(master=main_frame)
     frame_util.grid(row=3, column=0, sticky=NSEW)
 
-    b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(b_num1.get(), b_num2.get(), b_operand.get()))
+    b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(operation_string.get()))
     b_compute.pack(expand=True, pady=10)
 
     r = CTkButton(frame_util, text="exit", command=window.destroy)

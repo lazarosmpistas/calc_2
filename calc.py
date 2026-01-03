@@ -4,6 +4,16 @@ import os
 import sys
 
 
+def split_compute_string(compute_string):
+    if len(re.findall(r'[+*/-]', compute_string)) != 1:
+        return None, None, None, False
+    operator = re.findall(r'[+*/-]', compute_string)[0]
+    num1, num2= re.split(r'[+*/-]', compute_string)
+    if not num1 or not num2:
+        return None, None, None, False
+    return num1, num2, operator, True
+
+
 def operation(num1, num2, operator):
     """
     def for the operation of the calculator
