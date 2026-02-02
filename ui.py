@@ -119,6 +119,9 @@ def main():
     b_divide = CTkButton(master=frame_operation, text="/", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "/"))
     b_divide.grid(row=4, column=3)
 
+    b_backspace = CTkButton(master=frame_operation, text="<", width=50, height=50, command=lambda: operation_string.set(operation_string.get()[:len(operation_string.get()) - 1]))
+    b_backspace.grid(row=4, column=2)
+
     frame_operation.columnconfigure(0, weight=1)
     frame_operation.columnconfigure(1, weight=1)
     frame_operation.columnconfigure(2, weight=1)
