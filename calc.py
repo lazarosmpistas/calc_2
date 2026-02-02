@@ -3,6 +3,36 @@ import pandas as pd
 import os
 import sys
 
+# TODO: return the actual value of the computation
+def call_compute(compute_parts):
+    """
+    call the compute function with the given parts
+    :param: compute_parts: list of 3 strings, num1, num2, operator
+    :return: nothing for now, print result in terminal
+    """
+    num1, num2, operator = compute_parts[0], compute_parts[1], compute_parts[2]
+    if not checks(num1, num2, operator):
+        print("Invalid input my sister/brother!")
+    else:
+        num1, num2 = process(num1, num2)
+        result = operation(num1, num2, operator)
+        log_results(num1, num2, operator, result)
+        print(result)
+
+def split_compute_string(compute_string):
+    """
+    split the compute string into 3 parts: num1, num2, operator
+    :param: compute_string:
+    :return: list of 3 strings, num1, num2, operator
+    """
+    if len(re.findall(r'[+*/-]', compute_string)) != 1:
+        return None, None, None
+    operator = re.findall(r'[+*/-]', compute_string)[0]
+    num1, num2= re.split(r'[+*/-]', compute_string)
+    if not num1 or not num2:
+        return None, None, None
+    return [num1, num2, operator]
+
 
 def operation(num1, num2, operator):
     """
@@ -37,6 +67,9 @@ def checks(num1, num2, operator):
     :param operator:
     :return: bool
     """
+    if not num1.isnumeric() or not num2.isnumeric() or operator not in ['+', '-', '*', '/']:
+        print('Invalid input')
+        return False
     # split in commas/dots to check if numeric
     num1_parts = re.split(r'[.,]+', num1)
     num2_parts = re.split(r'[.,]+', num2)

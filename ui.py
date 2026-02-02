@@ -5,37 +5,6 @@ from customtkinter import CTkProgressBar
 import calc
 import re
 
-# TODO: return the actual value of the computation
-def call_compute(compute_parts):
-    """
-    call the compute function with the given parts
-    :param: compute_parts: list of 3 strings, num1, num2, operator
-    :return: nothing for now, print result in terminal
-    """
-    num1, num2, operator = compute_parts[0], compute_parts[1], compute_parts[2]
-    if not calc.checks(num1, num2, operator):
-        print("Invalid input my sister/brother!")
-    else:
-        num1, num2 = calc.process(num1, num2)
-        result = calc.operation(num1, num2, operator)
-        calc.log_results(num1, num2, operator, result)
-        print(result)
-
-
-def split_compute_string(compute_string):
-    """
-    split the compute string into 3 parts: num1, num2, operator
-    :param: compute_string:
-    :return: list of 3 strings, num1, num2, operator
-    """
-    if len(re.findall(r'[+*/-]', compute_string)) != 1:
-        return None, None, None
-    operator = re.findall(r'[+*/-]', compute_string)[0]
-    num1, num2= re.split(r'[+*/-]', compute_string)
-    if not num1 or not num2:
-        return None, None, None
-    return [num1, num2, operator]
-
 
 def main():
     """
@@ -72,54 +41,68 @@ def main():
     """
     operation frame with buttons
     """
-    # TODO: add backspace button
     frame_operation = CTkFrame(master=main_frame)
     frame_operation.grid(row=2, column=0, sticky=NSEW)
     #frame_operation.pack(expand=True, fill=BOTH)
 
-    b1 = CTkButton(master=frame_operation, text="1", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "1"))
+    b1 = CTkButton(master=frame_operation, text="1", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "1"))
     b1.grid(row=1, column=0, pady=10)
 
-    b2 = CTkButton(master=frame_operation, text="2", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "2"))
+    b2 = CTkButton(master=frame_operation, text="2", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "2"))
     b2.grid(row=1, column=1, padx=10)
 
-    b3 = CTkButton(master=frame_operation, text="3", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "3"))
+    b3 = CTkButton(master=frame_operation, text="3", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "3"))
     b3.grid(row=1, column=2)
 
-    b4 = CTkButton(master=frame_operation, text="4", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "4"))
+    b4 = CTkButton(master=frame_operation, text="4", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "4"))
     b4.grid(row=2, column=0, pady=10)
 
-    b5 = CTkButton(master=frame_operation, text="5", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "5"))
+    b5 = CTkButton(master=frame_operation, text="5", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "5"))
     b5.grid(row=2, column=1)
 
-    b6 = CTkButton(master=frame_operation, text="6", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "6"))
+    b6 = CTkButton(master=frame_operation, text="6", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "6"))
     b6.grid(row=2, column=2)
 
-    b7 = CTkButton(master=frame_operation, text="7", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "7"))
+    b7 = CTkButton(master=frame_operation, text="7", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "7"))
     b7.grid(row=3, column=0, pady=10)
 
-    b8 = CTkButton(master=frame_operation, text="8", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "8"))
+    b8 = CTkButton(master=frame_operation, text="8", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "8"))
     b8.grid(row=3, column=1)
 
-    b9 = CTkButton(master=frame_operation, text="9", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "9"))
+    b9 = CTkButton(master=frame_operation, text="9", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "9"))
     b9.grid(row=3, column=2)
 
-    b0 = CTkButton(master=frame_operation, text="0", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "0"))
+    b0 = CTkButton(master=frame_operation, text="0", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "0"))
     b0.grid(row=4, column=1, pady=10)
 
-    b_plus = CTkButton(master=frame_operation, text="+", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "+"))
+    b_plus = CTkButton(master=frame_operation, text="+", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "+"))
     b_plus.grid(row=1, column=3, padx=10)
 
-    b_minus = CTkButton(master=frame_operation, text="-", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "-"))
+    b_minus = CTkButton(master=frame_operation, text="-", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "-"))
     b_minus.grid(row=2, column=3)
 
-    b_multiply = CTkButton(master=frame_operation, text="*", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "*"))
+    b_multiply = CTkButton(master=frame_operation, text="*", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "*"))
     b_multiply.grid(row=3, column=3)
 
-    b_divide = CTkButton(master=frame_operation, text="/", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "/"))
+    b_divide = CTkButton(master=frame_operation, text="/", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get() + "/"))
     b_divide.grid(row=4, column=3)
 
-    b_backspace = CTkButton(master=frame_operation, text="<", width=50, height=50, command=lambda: operation_string.set(operation_string.get()[:len(operation_string.get()) - 1]))
+    b_backspace = CTkButton(master=frame_operation, text="<", width=50, height=50, command=lambda:
+    operation_string.set(operation_string.get()[:len(operation_string.get()) - 1]))
     b_backspace.grid(row=4, column=2)
 
     frame_operation.columnconfigure(0, weight=1)
@@ -133,7 +116,7 @@ def main():
     frame_util = CTkFrame(master=main_frame)
     frame_util.grid(row=3, column=0, sticky=NSEW)
 
-    b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(split_compute_string(string_entry.get())))
+    b_compute = CTkButton(frame_util, text="compute", command=lambda: calc.call_compute(calc.split_compute_string(string_entry.get())))
     b_compute.pack(expand=True, pady=10)
 
     r = CTkButton(frame_util, text="exit", command=window.destroy)
