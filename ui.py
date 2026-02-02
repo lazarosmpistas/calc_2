@@ -5,7 +5,14 @@ from customtkinter import CTkProgressBar
 import calc
 import re
 
-def call_compute(num1, num2, operator):
+# TODO: return the actual value of the computation
+def call_compute(compute_parts):
+    """
+    call the compute function with the given parts
+    :param: compute_parts: list of 3 strings, num1, num2, operator
+    :return: nothing for now, print result in terminal
+    """
+    num1, num2, operator = compute_parts[0], compute_parts[1], compute_parts[2]
     if not calc.checks(num1, num2, operator):
         print("Invalid input my sister/brother!")
     else:
@@ -16,23 +23,34 @@ def call_compute(num1, num2, operator):
 
 
 def split_compute_string(compute_string):
+    """
+    split the compute string into 3 parts: num1, num2, operator
+    :param: compute_string:
+    :return: list of 3 strings, num1, num2, operator
+    """
     if len(re.findall(r'[+*/-]', compute_string)) != 1:
         return None, None, None
     operator = re.findall(r'[+*/-]', compute_string)[0]
     num1, num2= re.split(r'[+*/-]', compute_string)
     if not num1 or not num2:
         return None, None, None
-    return num1, num2, operator
+    return [num1, num2, operator]
 
 
 def main():
+    """
+    main Function of the UI
+    """
+
     window = CTk(screenName="CALC_V2", )
     set_appearance_mode('dark')
 
     main_frame = CTkFrame(master=window)
     main_frame.grid(row=0, column=0)
 
-    # HEADER FRAME
+    """
+    header frame with title
+    """
 
     frame_header = CTkFrame(master=main_frame)
     frame_header.grid(row=0, column=0, sticky=NSEW)
@@ -41,6 +59,9 @@ def main():
     w = CTkLabel(frame_header, text='CALC IS SHORT FOR CALCULATOR BTW')
     w.pack(expand=True, fill=BOTH)
 
+    """
+    string frame with entry
+    """
     string_frame = CTkFrame(master=main_frame)
     string_frame.grid(row=1, column=0, sticky=NSEW)
 
@@ -48,18 +69,13 @@ def main():
     string_entry = CTkEntry(string_frame, state="readonly", textvariable=operation_string)
     string_entry.pack(expand=True, fill=BOTH)
 
+    """
+    operation frame with buttons
+    """
+    # TODO: add backspace button
     frame_operation = CTkFrame(master=main_frame)
     frame_operation.grid(row=2, column=0, sticky=NSEW)
     #frame_operation.pack(expand=True, fill=BOTH)
-
-    '''
-    b_num1 = CTkEntry(frame_operation, placeholder_text="Number 1", width=70)
-    b_num1.grid(row=0, column=0, sticky=W)
-    b_operand = CTkEntry(frame_operation, placeholder_text="Operation", width=70)
-    b_operand.grid(row=0, column=1, sticky=NSEW)
-    b_num2 = CTkEntry(frame_operation, placeholder_text="Number 2", width=70)
-    b_num2.grid(row=0, column=2, sticky=E)
-    '''
 
     b1 = CTkButton(master=frame_operation, text="1", width=50, height=50, command=lambda: operation_string.set(operation_string.get() + "1"))
     b1.grid(row=1, column=0, pady=10)
@@ -108,10 +124,13 @@ def main():
     frame_operation.columnconfigure(2, weight=1)
     frame_operation.columnconfigure(3, weight=1)
 
+    """
+    frame for util buttons: compute, exit, progress bar
+    """
     frame_util = CTkFrame(master=main_frame)
     frame_util.grid(row=3, column=0, sticky=NSEW)
 
-    b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(b_num1.get(), b_num2.get(), b_operand.get()))
+    b_compute = CTkButton(frame_util, text="compute", command=lambda: call_compute(split_compute_string(string_entry.get())))
     b_compute.pack(expand=True, pady=10)
 
     r = CTkButton(frame_util, text="exit", command=window.destroy)
