@@ -67,7 +67,10 @@ def checks(num1, num2, operator):
     :param operator:
     :return: bool
     """
-    if not num1.isnumeric() or not num2.isnumeric() or operator not in ['+', '-', '*', '/']:
+    if num1 is None or num2 is None or operator is None:
+        print('one of the inputs is None')
+        return False
+    elif not num1.isnumeric() or not num2.isnumeric() or operator not in ['+', '-', '*', '/']:
         print('Invalid input')
         return False
     # split in commas/dots to check if numeric
@@ -119,12 +122,12 @@ def log_results(num1, num2, operator, result,):
     :param num2:
     :param operator:
     :param result:
-    :return:
     """
     default_dir = os.getcwd()
     try:
         if not os.path.exists(f"{default_dir}/data/calc_logs.csv"):
             df = pd.DataFrame()
+            os.mkdir(f"{default_dir}/data")
         else:
             df = pd.read_csv(f"{default_dir}/data/calc_logs.csv")
     except Exception as e:
@@ -134,13 +137,13 @@ def log_results(num1, num2, operator, result,):
     df_new = pd.concat([df, pd.DataFrame([{'num1': num1, 'num2': num2, 'operator': operator, 'result': result}])],
                        ignore_index=True)
 
+
     df_new.to_csv('data/calc_logs.csv', index=False)
 
 
 def main():
     '''
     main function of the calculator
-    :return:
     '''
     # input
     num1 = input('Enter first number (float with . or ,): ')
@@ -157,6 +160,7 @@ def main():
     print(result)
 
     log_results(num1, num2, operator, result)
+
 
 if __name__ == '__main__':
     main()
