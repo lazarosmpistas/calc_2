@@ -116,7 +116,11 @@ def main():
     frame_util = CTkFrame(master=main_frame)
     frame_util.grid(row=3, column=0, sticky=NSEW)
 
-    b_compute = CTkButton(frame_util, text="compute", command=lambda: calc.call_compute(calc.split_compute_string(string_entry.get())))
+    result_string = StringVar()
+    result_label = CTkEntry(frame_util, state="readonly", textvariable=result_string)
+    result_label.pack(expand=True, pady=10)
+
+    b_compute = CTkButton(frame_util, text="compute", command=lambda: result_string.set(calc.call_compute(calc.split_compute_string(string_entry.get()))))
     b_compute.pack(expand=True, pady=10)
 
     r = CTkButton(frame_util, text="exit", command=window.destroy)

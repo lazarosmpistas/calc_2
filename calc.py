@@ -13,11 +13,13 @@ def call_compute(compute_parts):
     num1, num2, operator = compute_parts[0], compute_parts[1], compute_parts[2]
     if not checks(num1, num2, operator):
         print("Invalid input my sister/brother!")
+        return None
     else:
         num1, num2 = process(num1, num2)
         result = operation(num1, num2, operator)
         log_results(num1, num2, operator, result)
-        print(result)
+        return result
+    
 
 def split_compute_string(compute_string):
     """
