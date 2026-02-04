@@ -3,8 +3,7 @@ from tkinter import ttk
 from customtkinter import *
 from customtkinter import CTkProgressBar
 import calc
-import re
-
+from PIL import Image
 
 
 class coords:
@@ -127,10 +126,19 @@ def main():
     frame_operation.columnconfigure(3, weight=1)
 
     """
-    frame for util buttons: compute, exit, progress bar
+    frame for util buttons: compute, exit, progress bar, draw and extract img from canvas
     """
     frame_util = CTkFrame(master=main_frame)
     frame_util.grid(row=3, column=0, sticky=NSEW)
+
+    old = coords()
+    c = Canvas(frame_util, width=400, height=400, bg="black")
+    c.bind("<B1-Motion>", lambda event: old.draw(event, c))
+    c.bind("<ButtonRelease-1>", lambda event: old.__init__())
+    c.pack(expand=True, fill=BOTH)
+
+    extract_button = CTkButton(frame_util, text="extract", command=lambda: c.postscript(file="data\canvas_output.ps"))
+    extract_button.pack(expand=True, pady=10)
 
     result_string = StringVar()
     result_label = CTkEntry(frame_util, state="readonly", textvariable=result_string)
@@ -145,12 +153,6 @@ def main():
 
     progress_bar = CTkProgressBar(frame_util, mode='determinate', progress_color="green")
     progress_bar.pack(expand=True, fill="x")
-
-    old = coords()
-    c = Canvas(frame_util, width=400, height=400, bg="black")
-    c.bind("<B1-Motion>", lambda event: old.draw(event, c))
-    c.bind("<ButtonRelease-1>", lambda event: old.__init__())
-    c.pack(expand=True, fill=BOTH)
 
     window.update_idletasks()
     window.geometry(f"{main_frame.winfo_reqwidth()}x{main_frame.winfo_reqheight()}")
