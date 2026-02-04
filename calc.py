@@ -94,7 +94,6 @@ def checks(num1, num2, operator):
         print('Operator not recognized')
         return False
 
-    print("VALID")
     return True
 
 
