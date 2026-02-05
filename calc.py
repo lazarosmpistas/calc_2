@@ -4,9 +4,9 @@ import os
 import sys
 
 # TODO: return the actual value of the computation
-def call_compute(compute_parts):
+def compute(compute_parts):
     """
-    call the compute function with the given parts
+    compute function with the given parts
     :param: compute_parts: list of 3 strings, num1, num2, operator
     :return: nothing for now, print result in terminal
     """

@@ -4,6 +4,8 @@ from customtkinter import *
 from customtkinter import CTkProgressBar
 import calc
 from PIL import Image
+import io
+import os
 
 
 class coords:
@@ -18,8 +20,27 @@ class coords:
     def draw(self, event, c):
         # draw a line from the old coordinates to the new coordinates
         if self.old_x and self.old_y:
-            c.create_line(self.old_x, self.old_y, event.x, event.y, fill="white", width=3, smooth=True)
+            c.create_line(self.old_x, self.old_y, event.x, event.y, fill="red", width=3, smooth=True)
         self.old_x, self.old_y = event.x, event.y
+
+
+def ps_to_png(c: Canvas, dir, filename="canvas_output"):
+    if not os.path.exists(dir):
+        os.makedirs(dir, exist_ok=True)
+    c.update()
+    ps_path = os.path.join(dir, f"{filename}.ps")
+    # Tk canvas PostScript does not include the widget background by default.
+    # Paint a background rectangle so the PS/PNG matches the on-screen color.
+    bg = c.create_rectangle(
+        0, 0, c.winfo_width(), c.winfo_height(),
+        fill=c.cget("background"),
+        outline=c.cget("background"),
+    )
+    c.tag_lower(bg)
+    c.postscript(file=ps_path, colormode='color')
+    c.delete(bg)
+    img = Image.open(ps_path)
+    img.save(os.path.join(dir, f"{filename}.png"))
 
 
 def main():
@@ -28,6 +49,7 @@ def main():
     """
 
     window = CTk(screenName="CALC_V2", )
+    window.title("CALC_V2")
     set_appearance_mode('dark')
 
     main_frame = CTkFrame(master=window)
@@ -126,26 +148,36 @@ def main():
     frame_operation.columnconfigure(3, weight=1)
 
     """
-    frame for util buttons: compute, exit, progress bar, draw and extract img from canvas
+    frame for drawing utils
     """
-    frame_util = CTkFrame(master=main_frame)
-    frame_util.grid(row=3, column=0, sticky=NSEW)
+
+    frame_draw = CTkFrame(master=main_frame)
+    frame_draw.grid(column=1, row=0, rowspan=4, sticky=NSEW)
 
     old = coords()
-    c = Canvas(frame_util, width=400, height=400, bg="black")
+    c = Canvas(frame_draw, width=400, height=400, background="black")
+    #c.configure(background="black")
+
     c.bind("<B1-Motion>", lambda event: old.draw(event, c))
     c.bind("<ButtonRelease-1>", lambda event: old.__init__())
     c.pack(expand=True, fill=BOTH)
 
-    extract_button = CTkButton(frame_util, text="extract", command=lambda: c.postscript(file="data\canvas_output.ps"))
+    extract_button = CTkButton(frame_draw, text="extract", command=lambda: ps_to_png(c, "img"))
     extract_button.pack(expand=True, pady=10)
+    
+    """
+    frame for util buttons: compute, exit, progress bar
+    """
+
+    frame_util = CTkFrame(master=main_frame)
+    frame_util.grid(row=3, column=0, sticky=NSEW)
 
     result_string = StringVar()
     result_label = CTkEntry(frame_util, state="readonly", textvariable=result_string)
     result_label.pack(expand=True, pady=10)
 
     b_compute = CTkButton(frame_util, text="compute", command=lambda: 
-                          result_string.set(calc.call_compute(calc.split_compute_string(string_entry.get()))))
+                          result_string.set(calc.compute(calc.split_compute_string(string_entry.get()))))
     b_compute.pack(expand=True, pady=10)
 
     r = CTkButton(frame_util, text="exit", command=window.destroy)
