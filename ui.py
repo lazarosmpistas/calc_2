@@ -23,24 +23,36 @@ class coords:
             c.create_line(self.old_x, self.old_y, event.x, event.y, fill="red", width=3, smooth=True)
         self.old_x, self.old_y = event.x, event.y
 
+class exporter:
+    """
+    Docstring for exporter
+    """
+    def __init__(self):
+        self.export_count = 0
 
-def ps_to_png(c: Canvas, dir, filename="canvas_output"):
-    if not os.path.exists(dir):
-        os.makedirs(dir, exist_ok=True)
-    c.update()
-    ps_path = os.path.join(dir, f"{filename}.ps")
-    # Tk canvas PostScript does not include the widget background by default.
-    # Paint a background rectangle so the PS/PNG matches the on-screen color.
-    bg = c.create_rectangle(
-        0, 0, c.winfo_width(), c.winfo_height(),
-        fill=c.cget("background"),
-        outline=c.cget("background"),
-    )
-    c.tag_lower(bg)
-    c.postscript(file=ps_path, colormode='color')
-    c.delete(bg)
-    img = Image.open(ps_path)
-    img.save(os.path.join(dir, f"{filename}.png"))
+    def increment_count(self):
+        self.export_count += 1
+
+    def ps_to_png(self, c: Canvas, dir, filename="canvas_output"):
+        print("im in")
+        if not os.path.exists(dir):
+            os.makedirs(dir, exist_ok=True)
+        c.update()
+        ps_path = os.path.join(dir, f"{filename}_{self.export_count}.ps")
+        # Tk canvas PostScript does not include the widget background by default.
+        # Paint a background rectangle so the PS/PNG matches the on-screen color.
+        bg = c.create_rectangle(
+            0, 0, c.winfo_width(), c.winfo_height(),
+            fill=c.cget("background"),
+            outline=c.cget("background"),
+        )
+        c.tag_lower(bg)
+        c.postscript(file=ps_path, colormode='color')
+        c.delete(bg)
+        with Image.open(ps_path) as img:
+            img.save(os.path.join(dir, f"{filename}_{self.export_count}.png"))
+        self.increment_count()
+        os.remove(ps_path)
 
 
 def main():
@@ -53,7 +65,8 @@ def main():
     set_appearance_mode('dark')
 
     main_frame = CTkFrame(master=window)
-    main_frame.grid(row=0, column=0)
+    #main_frame.grid(row=0, column=0)
+    main_frame.pack(expand=True, fill=BOTH)
 
     """
     header frame with title
@@ -156,14 +169,17 @@ def main():
 
     old = coords()
     c = Canvas(frame_draw, width=400, height=400, background="black")
-    #c.configure(background="black")
 
     c.bind("<B1-Motion>", lambda event: old.draw(event, c))
     c.bind("<ButtonRelease-1>", lambda event: old.__init__())
     c.pack(expand=True, fill=BOTH)
 
-    extract_button = CTkButton(frame_draw, text="extract", command=lambda: ps_to_png(c, "img"))
-    extract_button.pack(expand=True, pady=10)
+    exp = exporter()
+    extract_button = CTkButton(frame_draw, text="extract", command=lambda: exp.ps_to_png(c, "img", "extracted"))
+    extract_button.pack(expand=True, fill=BOTH, side=LEFT, padx=5, pady=5)
+
+    clear_button = CTkButton(frame_draw, text="clear", command=lambda: c.delete("all"))
+    clear_button.pack(expand=True, fill=BOTH, side=LEFT, padx=5, pady=5)
     
     """
     frame for util buttons: compute, exit, progress bar
